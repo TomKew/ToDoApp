@@ -29,7 +29,15 @@ class ViewController: UIViewController{
             UserDefaults().set(0, forKey: "count")
         }
         
+        print("didLoad")
         updateTasks()
+    
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+    
+        super.viewWillAppear(true)
+       updateTasks()
     }
     
     func updateTasks(){
@@ -86,4 +94,32 @@ extension ViewController: UITableViewDataSource {
         
         return cell
     }
-}
+    
+     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            deleteTask()
+            tasks.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        }
+    }
+    
+     @objc func deleteTask() {
+        
+        
+        guard let count = UserDefaults().value(forKey: "count") as? Int else{
+                   return
+               }
+               
+            UserDefaults.standard.removeObject(forKey: "task_\(count-1)")
+        UserDefaults.standard.set(count, forKey: "task_\(count-1)")
+        }
+               
+        
+    }
+ 
+
+
